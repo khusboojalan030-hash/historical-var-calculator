@@ -1,0 +1,44 @@
+Simulating loan portfolio...
+
+Portfolio: 5000 loans, default rate = 4.62%
+
+======================================================================
+MODEL COMPARISON: in-sample AUC vs held-out test AUC vs 5-fold CV AUC
+======================================================================
+Model                 In-sample AUC   Test AUC    5-fold CV AUC   
+----------------------------------------------------------------------
+Logistic Regression   0.7375          0.7662      0.7283          
+Random Forest         0.8885          0.7439      0.7118          
+Gradient Boosting     0.9820          0.7331      0.6705          
+
+Why in-sample AUC is misleading: the model has already SEEN every
+one of these points during training, so it can partly memorize noise
+rather than learn the real pattern. That's why in-sample AUC is
+almost always higher than test/CV AUC - the gap between them tells
+you how much the model is overfitting. 5-fold CV is more reliable
+than a single test split because it averages performance across 5
+different train/test partitions, so it isn't just luck of one split.
+
+saved ROC curve chart to roc_curves.png
+
+Using best model (Logistic Regression) to score full portfolio PD...
+
+======================================================================
+PORTFOLIO EXPECTED LOSS  (EL = PD x LGD x EAD)
+======================================================================
+Number of loans:               5,000
+Total exposure (sum of EAD):    $67,027,900
+Average PD:                     4.63%
+Average LGD:                    55.16%
+Total Expected Loss:            $1,582,209
+EL as % of total exposure:      2.36%
+
+Top 5 riskiest loans by Expected Loss:
+ credit_score  dti_ratio       PD      LGD          EAD  expected_loss
+   558.570100   0.705393 0.241663 0.525839 38139.032602    4846.560343
+   663.549772   0.620229 0.166139 0.502509 56880.228936    4748.720546
+   636.138496   0.650364 0.205182 0.469672 48013.854016    4626.996937
+   569.786451   0.707257 0.195784 0.432335 51838.743583    4387.848936
+   539.853695   0.798922 0.393473 0.475465 21606.591693    4042.218694
+
+saved full scored portfolio to scored_portfolio.csv
